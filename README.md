@@ -5,10 +5,9 @@ A Laravel-based appointment booking system with separate user and admin dashboar
 ## 🚀 Tech Stack
 
 - **Backend**: Laravel 12 (PHP 8.2+)
-- **Frontend**: Blade Templates + Tailwind CSS 4.0
+- **Frontend**: Blade Templates + Bootstrap CSS 5.0
 - **Database**: MySQL
 - **Build Tool**: Vite
-- **Testing**: Pest PHP
 
 ## 📋 Prerequisites
 
@@ -16,7 +15,7 @@ Before running this project, make sure you have:
 
 - PHP 8.2 or higher
 - Composer
-- Node.js & npm
+- Node.js & npm (not necessary if you haven't used JavaScript)
 - MySQL database server
 - Git
 
@@ -28,13 +27,7 @@ git clone <repository-url>
 cd <project-folder>
 ```
 
-### 2. Install Dependencies
-```bash
-composer install
-npm install
-```
-
-### 3. Environment Configuration
+### 2. Environment Configuration
 ```bash
 copy .env.example .env
 ```
@@ -46,7 +39,15 @@ DB_HOST=127.0.0.1
 DB_PORT=3306
 DB_DATABASE=appointment_booking
 DB_USERNAME=root
-DB_PASSWORD=your_password
+DB_PASSWORD=
+SESSION_DRIVER=file
+```
+
+**Important**: Change `SESSION_DRIVER=database` to `SESSION_DRIVER=file` in your `.env` file.
+
+### 3. Install Dependencies
+```bash
+composer install
 ```
 
 ### 4. Generate Application Key
@@ -54,58 +55,26 @@ DB_PASSWORD=your_password
 php artisan key:generate
 ```
 
-### 5. Create Database
-Create a MySQL database named `appointment_booking`:
-```sql
-CREATE DATABASE appointment_booking;
-```
-
-### 6. Run Migrations
+### 5. Run Migrations
 ```bash
 php artisan migrate
 ```
 
-### 7. Build Frontend Assets
+### 6. Seed Admin User
 ```bash
-npm run build
+php artisan db:seed
 ```
+
+This command creates an admin user for accessing the admin dashboard.
 
 ## 🎯 Running the Application
 
-### Development Mode (Recommended)
-Run all services concurrently (server, queue, and vite):
-```bash
-composer dev
-```
-
-This starts:
-- Laravel development server on `http://localhost:8000`
-- Queue worker for background jobs
-- Vite dev server for hot module replacement
-
-### Manual Mode
-If you prefer to run services separately:
-
-**Terminal 1 - Laravel Server:**
+### Development Mode
 ```bash
 php artisan serve
 ```
 
-**Terminal 2 - Queue Worker:**
-```bash
-php artisan queue:listen
-```
-
-**Terminal 3 - Vite Dev Server:**
-```bash
-npm run dev
-```
-
-### Production Build
-```bash
-npm run build
-php artisan serve
-```
+This starts the Laravel development server on `http://localhost:8000`
 
 ## 📁 Project Structure
 
@@ -211,18 +180,6 @@ appointment-booking/
    - Reject appointments (status → rejected)
    - Reschedule appointments (change date, status → pending)
 
-## 🧪 Testing
-
-Run tests using Pest:
-```bash
-composer test
-```
-
-Or directly:
-```bash
-php artisan test
-```
-
 ## 🔧 Useful Commands
 
 ```bash
@@ -238,66 +195,17 @@ php artisan route:clear
 # Clear view cache
 php artisan view:clear
 
-# Run database seeders (if any)
-php artisan db:seed
-
 # Rollback migrations
 php artisan migrate:rollback
 
 # Fresh migration (drop all tables and re-migrate)
 php artisan migrate:fresh
-
-# Code formatting (Laravel Pint)
-./vendor/bin/pint
-
-# View application logs
-php artisan pail
 ```
 
-## 📝 Creating Admin User
+## 📝 Admin User Access
 
-Since there's no admin seeder, you need to manually create an admin user in the database:
+After running `php artisan db:seed`, use the seeded admin credentials to login at `/adminlogin`.
 
-```sql
-INSERT INTO users (name, email, password, role, created_at, updated_at) 
-VALUES ('Admin', 'admin@example.com', '$2y$12$your_hashed_password', 'admin', NOW(), NOW());
-```
-
-Or use Laravel Tinker:
-```bash
-php artisan tinker
-```
-```php
-User::create([
-    'name' => 'Admin',
-    'email' => 'admin@example.com',
-    'password' => bcrypt('password123'),
-    'role' => 'admin'
-]);
-```
-
-## 🐛 Troubleshooting
-
-### Database Connection Error
-- Verify MySQL is running
-- Check `.env` database credentials
-- Ensure database exists
-
-### Permission Errors
-```bash
-# Windows (run as administrator)
-icacls storage /grant Users:F /T
-icacls bootstrap/cache /grant Users:F /T
-```
-
-### Vite Not Loading
-- Ensure `npm run dev` is running
-- Check `vite.config.js` configuration
-- Clear browser cache
-
-### Queue Not Processing
-- Ensure queue worker is running: `php artisan queue:listen`
-- Check `QUEUE_CONNECTION=database` in `.env`
 
 ## 📦 Key Features
 
@@ -307,22 +215,9 @@ icacls bootstrap/cache /grant Users:F /T
 ✅ Admin approval workflow  
 ✅ Appointment rescheduling  
 ✅ Dashboard statistics  
-✅ Responsive UI with Tailwind CSS  
-✅ Session-based authentication  
-✅ Database queue for background jobs  
-
-## 🤝 Contributing
-
-1. Fork the repository
-2. Create a feature branch
-3. Commit your changes
-4. Push to the branch
-5. Open a pull request
+✅ Responsive UI with Bootstrap CSS  
+✅ File-based session management  
 
 ## 📄 License
 
 This project is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
-
-## 📧 Support
-
-For issues or questions, please open an issue in the repository.
